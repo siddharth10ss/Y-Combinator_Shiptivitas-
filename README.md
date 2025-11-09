@@ -7,7 +7,8 @@ This repository contains the complete implementation of both modules for the Y C
 ```
 Y-Combinator_Shiptivitas/
 ├── Shiptivitas-1/          # Module 1: Frontend Kanban Board
-└── Shiptivitas-2/          # Module 2: Backend API
+├── Shiptivitas-2/          # Module 2: Backend API
+└── Shiptivitas-3/          # Module 3: Analytics & Feature Ideas
 ```
 
 ## Module 1: Frontend Kanban Board
@@ -71,6 +72,43 @@ Server runs on http://localhost:3001
 - [README](./Shiptivitas-2/README.markdown)
 - [Implementation Notes](./Shiptivitas-2/IMPLEMENTATION_NOTES.md)
 - [Submission Summary](./Shiptivitas-2/SUBMISSION_SUMMARY.txt)
+
+---
+
+## Module 3: Analytics & Feature Ideas
+
+**Location:** `Shiptivitas-3/`
+
+**Task:** Analyze the impact of the Kanban Board feature and propose data-driven improvements.
+
+**Features:**
+- ✅ SQL queries for daily active users analysis
+- ✅ SQL queries for card status changes
+- ✅ Data visualization exports (CSV)
+- ✅ Three actionable feature ideas with hypothesis and impact
+
+**Tech Stack:**
+- SQLite3
+- Python (for graph generation)
+- SQL
+
+**Quick Start:**
+```bash
+cd Shiptivitas-3
+sqlite3 shiptivity.db ".read answer.sql"
+python generate_graphs.py  # Optional: requires matplotlib, pandas
+```
+
+**Key Findings:**
+- **224% increase** in daily active users after Kanban Board launch
+- Before: 3.63 avg DAU → After: 11.79 avg DAU
+- Users actively engaging with card movements
+
+**Documentation:**
+- [README](./Shiptivitas-3/README.md)
+- [Analysis & Ideas](./Shiptivitas-3/ANALYSIS_AND_IDEAS.md)
+- [Submission Summary](./Shiptivitas-3/SUBMISSION_SUMMARY.txt)
+- [Graph Instructions](./Shiptivitas-3/README_GRAPHS.md)
 
 ---
 

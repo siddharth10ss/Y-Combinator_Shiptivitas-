@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Status Changes</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .stat-box {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #F38181;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number of Status Changes by Card</h1>
+        <h3 style="text-align: center; color: #666;">Top 20 Most Active Cards</h3>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value">200</div>
+                <div class="stat-label">Total Cards</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: #95E1D3;">2.3</div>
+                <div class="stat-label">Avg Changes<br>per Card</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: #4ECDC4;">5</div>
+                <div class="stat-label">Max Changes<br>(Card #187)</div>
+            </div>
+        </div>
+        
+        <canvas id="myChart"></canvas>
+        
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            Higher engagement indicates active workflow management
+        </p>
+    </div>
+
+    <script>
+        // Load CSV data and create chart
+        fetch('card_status_changes.csv')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('\n').slice(1); // Skip header
+                const cardIds = [];
+                const changes = [];
+                
+                // Get top 20
+                let count = 0;
+                lines.forEach(line => {
+                    if (line.trim() && count < 20) {
+                        const [id, changeCount] = line.split(',');
+                        cardIds.push('Card ' + id);
+                        changes.push(parseInt(changeCount));
+                        count++;
+                    }
+                });
+                
+                // Reverse for horizontal bar chart (highest at top)
+                cardIds.reverse();
+                changes.reverse();
+                
+                // Color top 5 differently
+                const colors = changes.map((val, idx) => {
+                    return idx >= changes.length - 5 ? 'rgba(243, 129, 129, 0.8)' : 'rgba(149, 225, 211, 0.8)';
+                });
+                
+                const ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: cardIds,
+                        datasets: [{
+                            label: 'Number of Status Changes',
+                            data: changes,
+                            backgroundColor: colors,
+                            borderColor: colors.map(c => c.replace('0.8', '1')),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Status Changes'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Card ID'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
