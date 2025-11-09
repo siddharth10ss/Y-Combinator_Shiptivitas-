@@ -1,0 +1,113 @@
+SHIPTIVITAS BACKEND API - SUBMISSION SUMMARY
+============================================
+
+Candidate: Siddharth (siddharth10ss)
+Task: Y Combinator - Module 2: Working Fullstack 2
+Date: November 9, 2025
+
+ACCEPTANCE CRITERIA - ALL MET ✓
+--------------------------------
+✓ Database updates when cards move between swimlanes
+✓ Database updates when cards are reordered within swimlanes
+✓ Card positions persist after page refresh
+
+KEY FEATURES IMPLEMENTED
+------------------------
+1. PUT Endpoint Logic
+   - Handles status changes
+   - Handles priority changes
+   - Handles both simultaneously
+
+2. Automatic Priority Reordering
+   - Removes gaps when clients leave a status
+   - Shifts priorities when inserting at specific position
+   - Maintains sequential priorities (1,2,3,4...)
+
+3. Three Scenarios Supported
+   - Status change without priority (adds to end)
+   - Status change with priority (inserts at position)
+   - Priority change within same status (reorders)
+
+4. Database Persistence
+   - All changes saved to SQLite database
+   - Changes persist across server restarts
+   - Immediate consistency
+
+FILES MODIFIED
+--------------
+1. server.js - PUT endpoint implementation (~100 lines)
+2. package.json - Updated better-sqlite3 version
+3. package-lock.json - Dependency updates
+4. clients.db - Database file (updated by API)
+5. reset_db.sql - Database reset script (new file)
+6. README.markdown - Documentation updated
+7. IMPLEMENTATION_NOTES.md - Technical documentation (new file)
+
+TECHNICAL HIGHLIGHTS
+--------------------
+- Handles three distinct scenarios with appropriate logic
+- Prevents priority gaps through automatic reordering
+- Validates input (ID and priority)
+- Returns complete updated client list
+- Upgraded to better-sqlite3@latest for better compatibility
+
+TESTING
+-------
+✓ No-op test (same status, no priority)
+✓ Status change without priority
+✓ Status change with specific priority
+✓ Priority change within same swimlane
+✓ Database persistence verified
+✓ All curl commands from README tested
+
+DEPENDENCIES UPDATED
+--------------------
+- better-sqlite3: 5.4.0 → 11.x (latest)
+  Reason: Prebuilt binaries for Node.js v20+
+  Benefit: No native compilation required
+
+API ENDPOINTS
+-------------
+GET  /api/v1/clients - List all clients
+GET  /api/v1/clients?status={status} - Filter by status
+GET  /api/v1/clients/:id - Get single client
+PUT  /api/v1/clients/:id - Update client (IMPLEMENTED)
+
+PRIORITY SYSTEM
+---------------
+- Priority 1 = highest (top of swimlane)
+- Each status has independent priority sequence
+- No duplicate priorities within same status
+- Automatic reordering maintains sequential priorities
+
+EXAMPLE REQUESTS
+----------------
+# Move to complete (adds to end)
+curl -X PUT http://localhost:3001/api/v1/clients/1 \
+  -H "Content-Type: application/json" \
+  -d '{"status":"complete"}'
+
+# Move to complete at priority 3
+curl -X PUT http://localhost:3001/api/v1/clients/1 \
+  -H "Content-Type: application/json" \
+  -d '{"status":"complete", "priority": 3}'
+
+# Reorder within same status
+curl -X PUT http://localhost:3001/api/v1/clients/4 \
+  -H "Content-Type: application/json" \
+  -d '{"priority": 3}'
+
+REPOSITORY
+----------
+GitHub: https://github.com/siddharth10ss/Y-Combinator_Shiptivitas-2.git
+Server: http://localhost:3001 (when running npm start)
+
+DELIVERABLES
+------------
+1. shiptivitas-2-changes.patch - Git patchfile with all changes
+2. IMPLEMENTATION_NOTES.md - Detailed technical documentation
+3. This summary document
+4. reset_db.sql - Database reset script
+
+The implementation is complete, tested, and ready for production use.
+All acceptance criteria have been met and verified through testing.
