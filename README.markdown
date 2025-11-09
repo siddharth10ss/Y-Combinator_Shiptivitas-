@@ -36,16 +36,54 @@ Help update the frontend of a new productivity tool for shipping.
 <br><br>
 Acceptance Criteria
 <ul>
-<li> In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.</li>
-<li> There should be 3 swimlanes.</li>
-<li> When a user drags a card up, down or into another swimlane, it reorders the card and stays there. (frontend only)</li>
-<li> When a card changes swimlane, it should change color </li>
+<li> ✅ In the "Shipping Requests" tab of the application, all tasks should show in the backlog swimlane.</li>
+<li> ✅ There should be 3 swimlanes.</li>
+<li> ✅ When a user drags a card up, down or into another swimlane, it reorders the card and stays there. (frontend only)</li>
+<li> ✅ When a card changes swimlane, it should change color </li>
 </ul>
+
+**Status: All acceptance criteria have been met! ✅**
 
 <h2 id="installation"> Installation </h2>
 
 1. Clone the Shiptivity frontend repository
-2. Make the necessary changes to the code (frontend only) and make use of the <a href="#dragula"> Dragula tool </a>
+```bash
+git clone https://github.com/insidesherpa/shiptivitas-1.git
+cd shiptivitas-1
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000)
+
+**Note:** If you encounter OpenSSL errors with newer Node.js versions, the start script has been updated to use the legacy OpenSSL provider.
+
+## Implementation Details
+
+The kanban board has been fully implemented with the following features:
+
+### Features Implemented
+- **Three Swimlanes**: Backlog, In Progress, and Complete
+- **Drag and Drop**: Cards can be dragged between swimlanes using Dragula
+- **Color Coding**: Cards automatically change color based on status:
+  - Grey for Backlog
+  - Blue for In Progress
+  - Green for Complete
+- **State Management**: React state handles all card movements and updates
+
+### Technical Implementation
+- Dragula library integrated in `Board.js` component
+- Event handlers for drop events to update card status
+- React refs used to connect Dragula with swimlane containers
+- DOM manipulation handled by React to prevent conflicts
 
 ## Available Scripts
 
@@ -53,7 +91,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-this runs the app in the development mode.
+Runs the app in development mode.
 <br>Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.

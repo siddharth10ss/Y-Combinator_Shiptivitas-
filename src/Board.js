@@ -20,6 +20,85 @@ export default class Board extends React.Component {
       inProgress: React.createRef(),
       complete: React.createRef(),
     }
+    this.drake = null;
+  }
+
+  componentDidMount() {
+    this.drake = Dragula([
+      this.swimlanes.backlog.current,
+      this.swimlanes.inProgress.current,
+      this.swimlanes.complete.current
+    ], {
+      revertOnSpill: true
+    });
+
+    this.drake.on('drop', (el, target, source) => {
+      // Cancel Dragula's DOM manipulation - let React handle it
+      this.drake.cancel(true);
+      
+      // Get the card id and determine the new status based on target swimlane
+      const cardId = el.getAttribute('data-id');
+      const oldStatus = el.getAttribute('data-status');
+      let newStatus = 'backlog';
+      
+      if (target === this.swimlanes.inProgress.current) {
+        newStatus = 'in-progress';
+      } else if (target === this.swimlanes.complete.current) {
+        newStatus = 'complete';
+      }
+
+      // Only update if status changed
+      if (oldStatus !== newStatus) {
+        this.updateCardStatus(cardId, newStatus);
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.drake) {
+      this.drake.destroy();
+    }
+  }
+
+  updateCardStatus(cardId, newStatus) {
+    const { clients } = this.state;
+    let movedCard = null;
+    let sourceList = null;
+
+    // Find the card in all lists
+    for (let status in clients) {
+      const card = clients[status].find(c => c.id === cardId);
+      if (card) {
+        movedCard = { ...card, status: newStatus };
+        sourceList = status;
+        break;
+      }
+    }
+
+    if (movedCard && sourceList) {
+      // Remove from source list
+      const updatedSourceList = clients[sourceList].filter(c => c.id !== cardId);
+      
+      // Determine target list key
+      let targetList = 'backlog';
+      if (newStatus === 'in-progress') {
+        targetList = 'inProgress';
+      } else if (newStatus === 'complete') {
+        targetList = 'complete';
+      }
+
+      // Add to target list
+      const updatedTargetList = [...clients[targetList], movedCard];
+
+      // Update state
+      this.setState({
+        clients: {
+          ...clients,
+          [sourceList]: updatedSourceList,
+          [targetList]: updatedTargetList
+        }
+      });
+    }
   }
   getClients() {
     return [
